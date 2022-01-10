@@ -5,13 +5,16 @@ class Todo {
   int color;
   int done;
   int date;
+  int? id;
 
   // 생성자
-  Todo(
-      {required this.title,
-      required this.memo,
-      required this.category,
-      required this.color,
-      required this.done,
-      required this.date});
+  Todo({
+    required this.title,
+    required this.memo,
+    required this.category,
+    required this.color,
+    required this.done,
+    required this.date,
+    this.id,
+  });
 }

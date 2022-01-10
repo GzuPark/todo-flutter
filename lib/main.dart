@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:todo_flutter/data/database.dart';
 import 'package:todo_flutter/write.dart';
 
 import 'data/todo.dart';
@@ -34,25 +35,18 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  List<Todo> todos = [
-    Todo(
-        title: "패스트캠퍼스 강의듣기",
-        memo: "앱개발 입문강의 듣기",
-        color: Colors.redAccent.value,
-        done: 0,
-        category: "공부",
-        date: 20210709),
-    Todo(
-        title: "패스트캠퍼스 강의듣기 2",
-        memo: "앱개발 입문강의 듣기",
-        color: Colors.blueAccent.value,
-        done: 1,
-        category: "공부",
-        date: 20210709),
-  ];
+  final dbHelper = DatabaseHelper.instance;
+
+  List<Todo> todos = [];
+
+  void getTodayTodo() async {
+    todos = await dbHelper.getTodoByDate(Utils.getFormatTime(DateTime.now()));
+    setState(() {});
+  }
 
   @override
   void initState() {
+    getTodayTodo();
     super.initState();
   }
 
@@ -86,9 +80,7 @@ class _MyHomePageState extends State<MyHomePage> {
             ),
           );
 
-          setState(() {
-            todos.add(todo);
-          });
+          getTodayTodo();
         },
       ),
       body: ListView.builder(
@@ -126,11 +118,7 @@ class _MyHomePageState extends State<MyHomePage> {
                       });
                     },
                     onLongPress: () async {
-                      // 수정
-                      Todo _ = await Navigator.of(context).push(
-                        MaterialPageRoute(builder: (BuildContext ctx) => TodoWritePage(todo: t)),
-                      );
-                      setState(() {});
+                      getTodayTodo();
                     },
                   );
                 },
